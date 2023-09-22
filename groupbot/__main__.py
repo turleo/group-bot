@@ -16,7 +16,7 @@ load_dotenv()
 logging.basicConfig(
         format='[bold cyan]%(name)s[/] %(message)s',
         level=getenv('LOG_LEVEL', 0),
-        handlers=[RichHandler(rich_tracebacks=True, markup=True)]
+        handlers=[RichHandler(markup=True)]
 )
 
 log = logging.getLogger(__name__)
