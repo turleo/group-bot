@@ -24,7 +24,7 @@ async def keyboard_switcher(message: types.Message) -> None:
     )
 
 
-@router.message(lambda m: m.text)
+@router.message(lambda m: m.text and not m.text.startswith('/'))
 async def wrong_keyboard_detect(message: types.Message) -> None:
     vowels_count = 0
     consonant_count = 0
