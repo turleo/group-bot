@@ -40,7 +40,6 @@ async def create_quote(message: types.Message) -> None:
 
     log.debug(directory.name)
     hti.screenshot(url=f"file://{directory.name}/out.html", save_as="out.png")
-    with open("out.png", "rb") as f:
-        file = types.FSInputFile(directory.name + "/out.png")
-        await message.reply_photo(file)
+    file = types.FSInputFile(directory.name + "/out.png")
+    await message.reply_photo(file)
 
