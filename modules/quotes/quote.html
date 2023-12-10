@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+body {
+    background-color: black;
+
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+}
+
+.message {
+    display: grid;
+    grid-template-columns: 50px auto;
+    gap: 20px;
+
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    max-width: 500px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    background-position: center;
+    background-size: contain;
+    clip-path: circle(50%);
+}
+
+.bubble {
+    background-color: #1e1e1e;
+    color: white;
+    padding: 20px;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 15px;
+}
+.bubble p {
+    margin: 0;
+}
+
+.username {
+    font-weight: bolder;
+    padding-bottom: 16px;
+}
+        </style>
+    </head>
+    <body>
+        {% for message in messages %}
+        <div class="message">
+            <div class="avatar" style="background-image: url({{ message.avatar }})"></div>
+            <div class="bubble">
+                <p class="username" style="color: {{ message.author_color }}">{{ message.username }}</p>
+                <p class="text">{{ message.text }}</p>
+        </div>
+        {% endfor %}
+    </body>
+</html>
