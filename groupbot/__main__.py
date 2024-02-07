@@ -32,7 +32,7 @@ async def main() -> None:
     router = Router()
     modules = listdir(getenv("MODULES_PATH", "modules"))
     ignored_modules = getenv("IGNORED_MODULES", "").split(",")
-    log.info(ignored_modules)
+    log.info("ignoring modules: " + ', '.join(ignored_modules))
     for module in modules:
         if module.endswith(".py") and module not in ignored_modules:
             router.include_router(importlib.import_module(getenv("MODULES_PATH", "modules") + "." + module.split('.')[0]).router)
