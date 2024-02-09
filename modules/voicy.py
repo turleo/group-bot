@@ -3,14 +3,15 @@ Module to transcribe voice and video messages
 Inspired by https://github.com/backmeupplz/voicy
 """
 import aiohttp
-import json
-import json.decoder
+import re
 import logging
+
 from aiogram import Bot, Router
 from aiogram.types import Message
 from os import getenv, listdir
 from tempfile import TemporaryDirectory
 from subprocess import Popen, PIPE
+from groupbot.utils.demarkdown import demarkdown
 
 router = Router()
 log = logging.getLogger(__name__)
@@ -21,8 +22,11 @@ headers = {
     }
 session = aiohttp.ClientSession(headers=headers)
 
+answer_regex = re.compile(r"[\s\S]*\"text\": \"([\s\S]*)\",[\s\S]*")
+
 @router.message(lambda m: m.voice)
 async def voice_message_handler(message: Message) -> None:
+    await message.chat.do("typing")
     text = await file_decoder(message.voice.file_id, message.voice.mime_type, message.bot)
     if not text:
         return
@@ -31,8 +35,7 @@ async def voice_message_handler(message: Message) -> None:
 
 @router.message(lambda m: m.video_note)
 async def video_message_handler(message: Message) -> None:
-    import code
-    # code.interact(local=locals())
+    await message.chat.do("typing")
     text = await file_decoder(message.video_note.file_id, "video/mp4", message.bot)
     if not text:
         return
@@ -51,9 +54,9 @@ async def file_decoder(file_id: str | None, mime: str | None, bot: Bot) -> str:
         if not i.endswith(".wav"):
             continue
         log.debug(f"Transcriing {i}")
-        transcribed_text += await file_transcriber(f"{directory.name}/{i}")
+        transcribed_text += await file_transcriber(f"{directory.name}/{i}") + " "
             
-    return transcribed_text
+    return demarkdown(transcribed_text)
 
 
 async def file_transcriber(file: str) -> str:
@@ -64,12 +67,14 @@ async def file_transcriber(file: str) -> str:
                 data=f.read()
                 ) as resp:
             chunks = [chunk[0] async for chunk in resp.content.iter_chunks()]
-            try:
-                out = json.loads(chunks[-1].decode())
-                return out["text"]
-            except Exception:
-                log.error(chunks[-1].decode())
+
+            # answer sometimes is bigger, than 1 chunk
+            if not chunks:
                 return "...😢..."
+            out = answer_regex.match(chunks[-1].decode(errors="ignore"))
+            if out:
+                return out.group(1)
+            return "...😢..."
 
 
 def telegram_file_to_wav(file_path: str, dir_path: str) -> None:
