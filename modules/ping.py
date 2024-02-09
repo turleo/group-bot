@@ -14,6 +14,6 @@ async def pong(message: types.Message) -> None:
     version_bytes = subprocess.run(["git", "log", "-1", "--pretty=format:`%h` %s"],
                              stdout=subprocess.PIPE).stdout
     version = version_bytes.decode("utf8")
-    await message.answer(f"🏓 Pong\\!\n🏃‍♀️ Running `{uname()}`\n📜 Commit {version}")
+    await message.reply(f"🏓 Pong\\!\n🏃‍♀️ Running `{uname()}`\n📜 Commit {version}")
     log.debug(f"{message.from_user.full_name} pinged")
 

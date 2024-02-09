@@ -23,5 +23,5 @@ async def decode_qr(message: Message) -> None:
     for i, text in enumerate(qr):
         out += f"{i + 1}. {text.decode('utf8')}"
     demarkdowned = out.translate(demarkdowned_table)
-    await message.answer(demarkdowned, reply_to_message_id=message.message_id)
+    await message.reply(demarkdowned, reply_to_message_id=message.message_id)
 

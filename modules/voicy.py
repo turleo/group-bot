@@ -30,7 +30,7 @@ async def voice_message_handler(message: Message) -> None:
     text = await file_decoder(message.voice.file_id, message.voice.mime_type, message.bot)
     if not text:
         return
-    await message.answer(text, reply_to_message_id=message.message_id)
+    await message.reply(text, reply_to_message_id=message.message_id)
 
 
 @router.message(lambda m: m.video_note)
@@ -39,7 +39,7 @@ async def video_message_handler(message: Message) -> None:
     text = await file_decoder(message.video_note.file_id, "video/mp4", message.bot)
     if not text:
         return
-    await message.answer(text, reply_to_message_id=message.message_id)
+    await message.reply(text, reply_to_message_id=message.message_id)
 
 
 
