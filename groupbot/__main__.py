@@ -1,4 +1,3 @@
-import asyncio
 import importlib
 
 from aiogram.enums.parse_mode import ParseMode
@@ -16,10 +15,8 @@ load_dotenv()
 logging = Logging()
 log = logging.log.getLogger(__name__)
 
-dp = Dispatcher()
 
-
-async def main() -> None:
+def main() -> None:
     try:
         bot = Bot(str(getenv("TOKEN", "")), parse_mode=ParseMode.MARKDOWN_V2)
     except TokenValidationError:
@@ -33,10 +30,18 @@ async def main() -> None:
             router.include_router(importlib.import_module(getenv("MODULES_PATH", "modules") + "." + module.split('.')[0]).router)
             log.info(f"{module} loaded")
     
-    dp.include_router(router)
     logging.bot_started(bot)
-    await dp.start_polling(bot)
+
+    dp = Dispatcher()
+    dp.include_router(router)
+
+
+    if getenv("USE_WEBHOOKS"):
+        from .webhook import start_bot
+    else:
+        from .polling import start_bot
+    start_bot(dp, bot)
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
