@@ -19,8 +19,7 @@ consonant = "bcdfgjklmnpqstvxzhrwyбвгджзйклмнпрстфхцчшщ"
 @router.message(Command("xkb"))
 async def keyboard_switcher(message: types.Message) -> None:
     await message.reply(
-            switch_keyboard(str(message.reply_to_message.text)),
-            reply_to_message_id=message.message_id
+            switch_keyboard(str(message.reply_to_message.text))
     )
 
 
@@ -37,8 +36,7 @@ async def wrong_keyboard_detect(message: types.Message) -> None:
     # transliterate if vowels and consonant ratio is strange
     if vowels_count / total_letters < 0.35 or consonant_count / total_letters < 0.35:
         await message.reply(
-                switch_keyboard(str(message.text)),
-                reply_to_message_id=message.message_id
+                switch_keyboard(str(message.text))
         )
 
 
