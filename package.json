@@ -1,0 +1,19 @@
+{
+  "name": "group-bot",
+  "module": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "^1.1.6"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "run": "bun run --watch src/index.ts",
+    "typecheck": "tsc --noEmit --project ."
+  },
+  "dependencies": {
+    "@mtcute/bun": "^0.16.7",
+    "@mtcute/dispatcher": "^0.16.7"
+  }
+}
