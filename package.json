@@ -9,7 +9,8 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "run": "bun run --watch src/index.ts",
+    "run": "bun run src/index.ts",
+    "dev": "bun run --watch src/index.ts",
     "typecheck": "tsc --noEmit --project ."
   },
   "dependencies": {
