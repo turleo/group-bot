@@ -9,7 +9,7 @@ Configuration is stored in environment variables or in `.env` file. Avaliable va
 
 - `API_ID` and `API_HASH` - mtcute uses [mtproto](https://core.telegram.org/mtproto) and you need to get this variables from https://my.telegram.org/apps
 - `BOT_TOKEN` - bot token from [@BotFather](https://t.me/botfather)
-- `MODULES_PATH` - path to the modules folder. So far this varibale is required too.
+- `MODULES_PATH` - path to the modules folder. Default is `./modules`
 
 
 ## 🏃 Running 
