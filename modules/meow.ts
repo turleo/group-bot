@@ -7,7 +7,6 @@ function checker(update: MessageContext) {
 }
 
 function handler(update: MessageContext, api: Api) {
-  api.log.debug('pinged')
   return update.replyText('Мяу')
 }
 

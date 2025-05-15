@@ -1,6 +1,5 @@
 import type { MessageContext } from '@mtcute/dispatcher'
 import type { Api } from '~/src/api/types'
-import { Message } from '@mtcute/core'
 
 const allowedGroups = (process.env['ALLOWED_GROUPS'] ?? '')
     .split(';')
