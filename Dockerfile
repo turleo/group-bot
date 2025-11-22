@@ -2,7 +2,7 @@ FROM oven/bun:alpine
 
 WORKDIR /code
 COPY package.json ./ 
-RUN bun install
+RUN bun install --production
 
 COPY src/ src/
 COPY modules/ modules/
