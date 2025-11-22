@@ -1,9 +1,8 @@
-import { TelegramClient, html } from '@mtcute/bun'
+import { TelegramClient } from '@mtcute/bun'
 import { Dispatcher } from '@mtcute/dispatcher'
 import { importModules } from './dispatcher/dispatcher'
 import { Api } from './api'
-
-import type { MessageHandler } from './dispatcher/types'
+import { LogManager } from '@mtcute/bun/utils.js'
 
 if (typeof process.env.API_ID !== 'string' || typeof process.env.API_HASH !== 'string') {
   throw new TypeError()
@@ -11,7 +10,8 @@ if (typeof process.env.API_ID !== 'string' || typeof process.env.API_HASH !== 's
 
 const tg = new TelegramClient({
   apiId: parseInt(process.env.API_ID!),
-  apiHash: process.env.API_HASH!
+  apiHash: process.env.API_HASH!,
+  logLevel: LogManager.INFO,
 })
 
 const self = await tg.start({
@@ -19,7 +19,9 @@ const self = await tg.start({
 })
 const dp = Dispatcher.for(tg)
 
-const api = Api(tg)
+const api = Api(tg, process.env)
+
+api.log.info(`🔥 Starting bot as @${self.username}`)
 
 importModules(dp, api)
 

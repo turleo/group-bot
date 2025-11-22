@@ -3,16 +3,16 @@ import type { Logging } from './types'
 
 export default (bot: TelegramClient): Logging => {
   const error = (message: any) => {
-    console.error(message)
+    bot.log.error(message)
   }
   const warning = (message: any) => {
-    console.log(message)
+    bot.log.warn(message)
   }
   const info = (message: any) => {
-    console.log(message)
+    bot.log.info(message)
   }
   const debug = (message: any) => {
-    console.log(message)
+    bot.log.debug(message)
   }
 
   return {
