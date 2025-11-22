@@ -1,23 +1,23 @@
-import type { MessageContext } from '@mtcute/dispatcher'
-import type { Api } from '~/src/api/types'
+import type { MessageContext } from "@mtcute/dispatcher";
 
-const allowedGroups = (process.env['ALLOWED_GROUPS'] ?? '')
-    .split(';')
-    .map((x) => parseInt(x))
+import type { Api } from "~/src/api/types";
+
+const allowedGroups = (process.env.ALLOWED_GROUPS ?? "")
+  .split(";")
+  .map(groupId => parseInt(groupId, 10));
 
 function checker(update: MessageContext) {
-  return update.sender.type == 'chat' && !allowedGroups.includes(update.sender.id)
+  return update.sender.type === "chat" && !allowedGroups.includes(update.sender.id);
 }
 
-function handler(update: MessageContext, api: Api) {
-  api.log.info(`user ${update.sender.id} banned`)
-  update.delete()
-  update.client.banChatMember({ chatId: update.chat.id, participantId: update.sender.id })
+async function handler(update: MessageContext, api: Api) {
+  api.log.info(`user ${update.sender.displayName} banned`);
+  await update.delete();
+  await update.client.banChatMember({ chatId: update.chat.id, participantId: update.sender.id });
 }
 
-export default  {
-  event_name: 'new_message',
+export default {
   checker,
-  handler
-}
-
+  eventName: "new_message",
+  handler,
+};

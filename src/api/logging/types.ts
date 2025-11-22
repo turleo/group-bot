@@ -1,6 +1,6 @@
 export interface Logging {
-  error: (message: any) => void,
-  warning: (message: any) => void,
-  info: (message: any) => void,
-  debug: (message: any) => void
+  error: (message: string) => void;
+  warning: (message: string) => void;
+  info: (message: string) => void;
+  debug: (message: string) => void;
 }

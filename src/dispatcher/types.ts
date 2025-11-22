@@ -1,7 +1,10 @@
-import type { MessageContext } from '@mtcute/dispatcher'
+import type { MessageContext } from "@mtcute/dispatcher";
+
+import type { Api } from "@/api/types";
 
 export interface MessageHandler {
-  event_name: 'new_message' // TODO: use addUpdateHandler and add other types
-  checker: (update: MessageContext) => boolean
-  handler: (update: MessageContext, api: any) => void
+  // TODO: use addUpdateHandler and add other types
+  eventName: "new_message";
+  checker: (update: MessageContext) => boolean;
+  handler: (update: MessageContext, api: Api) => void;
 }

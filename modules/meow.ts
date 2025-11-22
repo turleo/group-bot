@@ -1,17 +1,15 @@
-import type { MessageContext } from '@mtcute/dispatcher'
-import type { Api } from '~/src/api/types'
-import { Message } from '@mtcute/core'
+import type { MessageContext } from "@mtcute/dispatcher";
 
 function checker(update: MessageContext) {
-  return /^([Мм]([яувкрЯъУКВРЪ]){1,}){1,}/.exec(update.text)
+  return /^(?:[Мм](?:[яувкрЯъУКВРЪ]){1,}){1,}/u.exec(update.text);
 }
 
-function handler(update: MessageContext, api: Api) {
-  return update.replyText('Мяу')
+function handler(update: MessageContext) {
+  return update.replyText("Мяу");
 }
 
-export default  {
-  event_name: 'new_message',
+export default {
   checker,
-  handler
-}
+  eventName: "new_message",
+  handler,
+};

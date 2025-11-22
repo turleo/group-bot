@@ -1,27 +1,28 @@
-import { TelegramClient } from '@mtcute/bun'
-import { Dispatcher } from '@mtcute/dispatcher'
-import { importModules } from './dispatcher/dispatcher'
-import { Api } from './api'
-import { LogManager } from '@mtcute/bun/utils.js'
+import { TelegramClient } from "@mtcute/bun";
+import { LogManager } from "@mtcute/bun/utils.js";
+import { Dispatcher } from "@mtcute/dispatcher";
 
-if (typeof process.env.API_ID !== 'string' || typeof process.env.API_HASH !== 'string') {
-  throw new TypeError()
+import { api } from "./api";
+import type { Api as ApiType } from "./api/types";
+import { importModules } from "./dispatcher/dispatcher";
+
+if (typeof process.env.API_ID !== "string" || typeof process.env.API_HASH !== "string") {
+  throw new TypeError();
 }
 
-const tg = new TelegramClient({
-  apiId: parseInt(process.env.API_ID!),
-  apiHash: process.env.API_HASH!,
+const tg: TelegramClient = new TelegramClient({
+  apiHash: process.env.API_HASH,
+  apiId: parseInt(process.env.API_ID, 10),
   logLevel: LogManager.INFO,
-})
+});
 
 const self = await tg.start({
-  botToken: process.env.BOT_TOKEN
-})
-const dp = Dispatcher.for(tg)
+  botToken: process.env.BOT_TOKEN,
+});
+const dp = Dispatcher.for(tg);
 
-const api = Api(tg, process.env)
+const globalApi: ApiType = api(tg, process.env);
 
-api.log.info(`🔥 Starting bot as @${self.username}`)
+globalApi.log.info(`🔥 Starting bot as @${self.username ?? "???"}`);
 
-importModules(dp, api)
-
+await importModules(dp, globalApi);

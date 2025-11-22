@@ -1,18 +1,18 @@
-import type { MessageContext } from '@mtcute/dispatcher'
-import type { Api } from '~/src/api/types'
+import type { MessageContext } from "@mtcute/dispatcher";
 
 // TODO: move this to config
 function checker(update: MessageContext) {
-  return /([а-яА-Я]*(а|е)[а-яА-Я]*[смСМ]((ен(ь|((е|ё)в|(Е|Ё)В)))|(я|ю)ня))/dgui.exec(update.text)
+  // eslint-disable-next-line prefer-named-capture-group
+  return /([а-яА-Я]*(а|е)[а-яА-Я]*[смСМ]((ен(ь|((е|ё)в|(Е|Ё)В)))|(я|ю)ня))/dgui.exec(update.text);
 }
 
-function handler(update: MessageContext, api: Api) {
-  const group = checker(update)?.[1]
-  return update.replyText(`${group} moment`)
+function handler(update: MessageContext) {
+  const group = checker(update)?.[1];
+  return update.replyText(`${group ?? "😳"} moment`);
 }
 
-export default  {
-  event_name: 'new_message',
+export default {
   checker,
-  handler
-}
+  eventName: "new_message",
+  handler,
+};
