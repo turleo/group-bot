@@ -6,11 +6,10 @@ import type { Api } from "@/api/types";
 import type { MessageHandler } from "./types";
 
 async function importFromPath(dp: Dispatcher, api: Api, path: string) {
-  const glob = new Glob("**/*.ts");
+  const glob = new Glob("*.ts");
   for await (const file of glob.scan({ absolute: true, cwd: path })) {
     api.log.info(`✅ found ${file}`);
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const module = (require(file) as { default: MessageHandler }).default;
+    const module = (await import(file) as { default: MessageHandler }).default;
 
     switch (module.eventName) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
