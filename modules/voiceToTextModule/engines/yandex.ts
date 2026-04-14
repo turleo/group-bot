@@ -45,10 +45,6 @@ async function recursivelyFetchRecognition(
       headers: {
         Authorization: apiKey,
       },
-      proxy: "http://localhost:8080",
-      tls: {
-        rejectUnauthorized: false,
-      },
     },
   );
   if (!recognitionResult.ok) {

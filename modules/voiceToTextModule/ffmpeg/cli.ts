@@ -5,7 +5,7 @@ export async function convertFileToOpus(input: string): Promise<Uint8Array> {
     "-f", "ogg", "-c:a", "libopus",
     "-",
   ], {
-    stderr: "inherit",
+    stderr: "ignore",
     stdout: "pipe",
   });
   const output = await Bun.readableStreamToArrayBuffer(proc.stdout);
