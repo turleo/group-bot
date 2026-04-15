@@ -7,10 +7,16 @@ import { MessageContext } from "@mtcute/dispatcher";
 
 import type { Api } from "~/src/api/types";
 
-import { recognizeSpeech } from "./engines/yandex";
+import { recognizeSpeech as recognizeSpeechOpenRouter } from "./engines/openrouter";
+import { recognizeSpeech as recognizeSpeechYandex } from "./engines/yandex";
 import { convertFileToOpus } from "./ffmpeg";
 import type { Recognition } from "./types/recognition";
 import { RecognitionStatus } from "./types/recognitionStatus";
+
+const speechEngines = {
+  openrouter: recognizeSpeechOpenRouter,
+  yandex: recognizeSpeechYandex,
+};
 
 async function sendAnswer(api: Api, answer: Message, result: string) {
   if (!result.trim()) {
@@ -59,7 +65,7 @@ async function processMedia(api: Api, answer: Message, update: MessageContext) {
   const filePath = join(tempDir, update.media.fileName ?? "unknown.ogg");
   await api.tg.downloadToFile(filePath, update.media);
   const remuxedFile = await convertFileToOpus(filePath);
-  const stateIterator = recognizeSpeech(api, remuxedFile);
+  const stateIterator = speechEngines[api.config.VOICE_TO_TEXT_ENGINE as keyof typeof speechEngines](api, remuxedFile);
   await processStatus(api, answer, stateIterator);
   await rm(tempDir, { recursive: true });
 }
