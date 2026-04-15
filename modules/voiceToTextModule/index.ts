@@ -13,6 +13,10 @@ import type { Recognition } from "./types/recognition";
 import { RecognitionStatus } from "./types/recognitionStatus";
 
 async function sendAnswer(api: Api, answer: Message, result: string) {
+  if (!result.trim()) {
+    await api.tg.deleteMessages([answer]);
+    return;
+  }
   const answerText = {
     entities: [
       {
@@ -39,8 +43,7 @@ async function processStatus(api: Api, answer: Message, stateIterator: AsyncIter
         await sendAnswer(api, answer, state.text ?? "😿");
         return;
       case RecognitionStatus.Failed:
-        await api.tg.editMessage({ message: answer, text: "😿" });
-        return;
+        throw new Error("Recognition failed");
       default:
         await api.tg.editMessage({ message: answer, text: "🦻🤔🦻" });
         break;
@@ -48,10 +51,9 @@ async function processStatus(api: Api, answer: Message, stateIterator: AsyncIter
   }
 }
 
-export async function handleMessage(update: MessageContext, api: Api) {
-  const answer = await update.replyText("🦻🐱🦻");
+async function processMedia(api: Api, answer: Message, update: MessageContext) {
   if (update.media?.type !== "voice" && update.media?.type !== "video") {
-    return;
+    throw new Error("Unsupported media type");
   }
   const tempDir = await mkdtemp(join(tmpdir(), "groupbot-tts"));
   const filePath = join(tempDir, update.media.fileName ?? "unknown.ogg");
@@ -60,4 +62,25 @@ export async function handleMessage(update: MessageContext, api: Api) {
   const stateIterator = recognizeSpeech(api, remuxedFile);
   await processStatus(api, answer, stateIterator);
   await rm(tempDir, { recursive: true });
+}
+
+export async function handleMessage(update: MessageContext, api: Api) {
+  const answer = await update.replyText("🦻🐱🦻");
+  try {
+    await processMedia(api, answer, update);
+  }
+  catch (error) {
+    if (error instanceof Error) {
+      api.log.error(error.message);
+    }
+    else {
+      api.log.error(String(error));
+    }
+
+    await api.tg.deleteMessages([answer]);
+    await api.tg.sendReaction({
+      emoji: "😢",
+      message: update.messages[0],
+    });
+  }
 }
