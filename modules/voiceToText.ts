@@ -1,4 +1,4 @@
-import { filters, MessageContext } from "@mtcute/dispatcher";
+import { Dispatcher, filters, MessageContext } from "@mtcute/dispatcher";
 
 import type { Api } from "~/src/api/types";
 
@@ -10,8 +10,10 @@ async function handler(update: MessageContext, api: Api) {
   await handleMessage(update, api);
 }
 
-export default {
-  checker,
-  eventName: "new_message",
-  handler,
-};
+export function init(api: Api) {
+  const dp = Dispatcher.child();
+  dp.onNewMessage(checker, async (update) => {
+    await handler(update as MessageContext, api);
+  });
+  return dp;
+}

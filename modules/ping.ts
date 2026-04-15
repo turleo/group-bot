@@ -1,15 +1,11 @@
-import type { MessageContext } from "@mtcute/dispatcher";
+import { Dispatcher, filters, type MessageContext } from "@mtcute/dispatcher";
 
 import type { Api } from "~/src/api/types";
 
-function checker(update: MessageContext) {
-  return update.text.startsWith("/ping");
-}
-
-function handler(update: MessageContext, api: Api) {
+async function handler(update: MessageContext, api: Api) {
   api.log.debug(`${update.sender.displayName} pinged`);
   const commitHash = Bun.env.COMMIT_HASH ?? "HEAD";
-  return update.replyText({
+  await update.replyText({
     entities: [
       {
         // eslint-disable-next-line id-length
@@ -23,8 +19,10 @@ function handler(update: MessageContext, api: Api) {
   });
 }
 
-export default {
-  checker,
-  eventName: "new_message",
-  handler,
-};
+export function init(api: Api) {
+  const dp = Dispatcher.child<{ api: Api }>();
+  dp.onNewMessage(filters.command("ping"), async (update) => {
+    await handler(update, api);
+  });
+  return dp;
+}
