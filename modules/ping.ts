@@ -8,7 +8,19 @@ function checker(update: MessageContext) {
 
 function handler(update: MessageContext, api: Api) {
   api.log.debug(`${update.sender.displayName} pinged`);
-  return update.replyText("🏓 Pong");
+  const commitHash = Bun.env.COMMIT_HASH ?? "HEAD";
+  return update.replyText({
+    entities: [
+      {
+        // eslint-disable-next-line id-length
+        _: "messageEntityTextUrl" as const,
+        length: commitHash.length,
+        offset: 9,
+        url: `https://github.com/turleo/group-bot/commit/${commitHash}`,
+      },
+    ],
+    text: `🏓 Pong \n${commitHash}`,
+  });
 }
 
 export default {
