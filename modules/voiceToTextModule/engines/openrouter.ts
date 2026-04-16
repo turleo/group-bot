@@ -58,6 +58,7 @@ export async function* recognizeSpeech(api: Api, file: Uint8Array): AsyncIterabl
     headers: {
       "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
+      "X-OpenRouter-Title": "@turleo_group_bot",
     },
     method: "POST",
   });
