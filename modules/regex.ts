@@ -2,12 +2,12 @@ import { Dispatcher, type MessageContext } from "@mtcute/dispatcher";
 
 const regexMap = [
   {
-    regex: /^(?:[Мм](?:[яувкрЯъУКВРЪ]){1,}){1,}.*/u,
+    regex: /^(?:[м](?:[яувкръ]){1,}){1,}.*/uis,
     response: "Мяу",
   },
   {
     // eslint-disable-next-line prefer-named-capture-group
-    regex: /([а-яА-Я]*(а|е)[а-яА-Я]*[смСМ]((ен(ь|((е|ё)в|(Е|Ё)В)))|(я|ю)ня))/dgui,
+    regex: /.*?([а-я]*[см]((ен(ь|((е|ё)в)))|(я|ю)ня)).*/uis,
     response: "$1 moment",
   },
 ];
