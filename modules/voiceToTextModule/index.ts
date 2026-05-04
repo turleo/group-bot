@@ -7,14 +7,16 @@ import { MessageContext } from "@mtcute/dispatcher";
 
 import type { Api } from "~/src/api/types";
 
-import { recognizeSpeech as recognizeSpeechOpenRouter } from "./engines/openrouter";
+import { recognizeSpeech as recognizeSpeechOpenRouterChat } from "./engines/openrouterChat";
+import { recognizeSpeech as recognizeSpeechOpenRouterTranscriptions } from "./engines/openrouterTranscriptions";
 import { recognizeSpeech as recognizeSpeechYandex } from "./engines/yandex";
 import { convertFileToOpus } from "./ffmpeg";
 import type { Recognition } from "./types/recognition";
 import { RecognitionStatus } from "./types/recognitionStatus";
 
 const speechEngines = {
-  openrouter: recognizeSpeechOpenRouter,
+  openrouterChat: recognizeSpeechOpenRouterChat,
+  openrouterTranscriptions: recognizeSpeechOpenRouterTranscriptions,
   yandex: recognizeSpeechYandex,
 };
 

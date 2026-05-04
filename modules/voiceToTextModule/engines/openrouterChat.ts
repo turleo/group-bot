@@ -12,6 +12,15 @@ interface OpenRouterResponse {
   }[];
 }
 
+const SYSTEM_PROMPT = [
+  "You are an accurate speech-to-text transcription assistant.",
+  "Transcribe the provided audio into clean, readable text. Preserve the",
+  "speaker's meaning and include natural punctuation, sentence boundaries,",
+  "capitalization, and grammar as implied by the speech. Use best-effort",
+  "interpretation for unclear words based on context. Return only the final",
+  "transcript text, with no commentary, labels, or extra formatting.",
+].join(" ");
+
 function getOpenRouterConfig(api: Api) {
   const apiKey = api.config.OPEN_ROUTER_API_KEY;
   if (typeof apiKey !== "string") {
@@ -37,7 +46,7 @@ export async function* recognizeSpeech(api: Api, file: Uint8Array): AsyncIterabl
     body: JSON.stringify({
       messages: [
         {
-          content: "You are an accurate speech-to-text transcription assistant. Transcribe the provided audio into clean, readable text. Preserve the speaker's meaning and include natural punctuation, sentence boundaries, capitalization, and grammar as implied by the speech. Use best-effort interpretation for unclear words based on context. Return only the final transcript text, with no commentary, labels, or extra formatting.",
+          content: SYSTEM_PROMPT,
           role: "system",
         },
         {
@@ -58,6 +67,7 @@ export async function* recognizeSpeech(api: Api, file: Uint8Array): AsyncIterabl
     headers: {
       "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
+      "HTTP-Referer": "https://github.com/turleo/group-bot",
       "X-OpenRouter-Title": "@turleo_group_bot",
     },
     method: "POST",
