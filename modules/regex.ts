@@ -5,11 +5,6 @@ const regexMap = [
     regex: /^(?:[м](?:[яувкръ]){1,}){1,}.*/uis,
     response: "Мяу",
   },
-  {
-    // eslint-disable-next-line prefer-named-capture-group
-    regex: /.*?([а-я]*[см]((ен(ь|((е|ё)в)))|(я|ю)ня)).*/uis,
-    response: "$1 moment",
-  },
 ];
 
 async function handler(update: MessageContext) {
